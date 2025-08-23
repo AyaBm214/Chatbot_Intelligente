@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Deadlines - Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"], 
+        input[type="datetime-local"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, 
+        input[type="datetime-local"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-option input[type="radio"] {
+            width: auto;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 10px 20px rgba(108, 117, 125, 0.3);
+        }
+
+        .deadlines-list {
+            margin-top: 40px;
+        }
+
+        .deadline-card {
+            background: white;
+            border: 1px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .deadline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .deadline-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .deadline-type {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+        }
+
+        .deadline-info {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .deadline-target {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 Gestion des Deadlines</h1>
+            <p>Interface d'administration pour créer et gérer les deadlines</p>
+        </div>
+
+        <div class="content">
+            <!-- Formulaire d'ajout de deadline -->
+            <div class="form-section">
+                <h2>➕ Ajouter une nouvelle deadline</h2>
+                
+                <div id="alert-container"></div>
+                
+                <form id="deadlineForm">
+                    <div class="form-group">
+                        <label for="titre">Titre *</label>
+                        <input type="text" id="titre" name="titre" required 
+                               placeholder="Ex: Dépôt rapport PFE">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description (optionnel)</label>
+                        <textarea id="description" name="description" 
+                                  placeholder="Ex: Le rapport doit être soumis en PDF"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dateLimite">Date limite *</label>
+                        <input type="datetime-local" id="dateLimite" name="dateLimite" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="type">Type de deadline</label>
+                        <select id="type" name="type">
+                            <option value="">Sélectionner un type</option>
+                            <option value="TP">TP</option>
+                            <option value="Examen">Examen</option>
+                            <option value="Projet">Projet</option>
+                            <option value="Rapport">Rapport</option>
+                            <option value="PFE">PFE</option>
+                            <option value="Information">Information</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Cible de la deadline *</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="cible-promo" name="cibleType" value="promo">
+                                <label for="cible-promo">Pour toute une promo/classe</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="cible-etudiant" name="cibleType" value="etudiant">
+                                <label for="cible-etudiant">Pour un étudiant spécifique</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group hidden" id="promo-section">
+                        <label for="promo-select">Sélectionner la promo/classe</label>
+                        <select id="promo-select" name="promo">
+                            <option value="">Chargement...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group hidden" id="etudiant-section">
+                        <label for="etudiant-select">Sélectionner l'étudiant</label>
+                        <select id="etudiant-select" name="etudiant">
+                            <option value="">Chargement...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn">✅ Créer la deadline</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">🔄 Réinitialiser</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Liste des deadlines existantes -->
+            <div class="deadlines-list">
+                <h2>📋 Deadlines existantes</h2>
+                <div id="deadlines-container">
+                    <div class="loading">Chargement des deadlines...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let classes = [];
+        let filieres = [];
+        let etudiants = [];
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            setupEventListeners();
+        });
+
+        // Configuration des événements
+        function setupEventListeners() {
+            // Gestion du formulaire
+            document.getElementById('deadlineForm').addEventListener('submit', handleSubmit);
+            
+            // Gestion des boutons radio pour la cible
+            document.querySelectorAll('input[name="cibleType"]').forEach(radio => {
+                radio.addEventListener('change', handleCibleChange);
+            });
+        }
+
+        // Chargement des données
+        async function loadData() {
+            try {
+                // Charger les classes et filières
+                const [classesResponse, filieresResponse, etudiantsResponse] = await Promise.all([
+                    fetch('/admin/deadlines/classes'),
+                    fetch('/admin/deadlines/filieres'),
+                    fetch('/admin/deadlines/etudiants')
+                ]);
+
+                if (classesResponse.ok) classes = await classesResponse.json();
+                if (filieresResponse.ok) filieres = await filieresResponse.json();
+                if (etudiantsResponse.ok) etudiants = await etudiantsResponse.json();
+
+                // Remplir les listes déroulantes
+                populatePromoSelect();
+                populateEtudiantSelect();
+
+                // Charger les deadlines existantes
+                loadDeadlines();
+            } catch (error) {
+                showAlert('Erreur lors du chargement des données', 'error');
+            }
+        }
+
+        // Remplir la liste des promos/classes
+        function populatePromoSelect() {
+            const select = document.getElementById('promo-select');
+            select.innerHTML = '<option value="">Sélectionner une promo/classe</option>';
+            
+            // Ajouter les classes
+            classes.forEach(classe => {
+                const option = document.createElement('option');
+                option.value = `classe:${classe}`;
+                option.textContent = `Classe: ${classe}`;
+                select.appendChild(option);
+            });
+            
+            // Ajouter les filières
+            filieres.forEach(filiere => {
+                const option = document.createElement('option');
+                option.value = `promo:${filiere}`;
+                option.textContent = `Promo: ${filiere}`;
+                select.appendChild(option);
+            });
+        }
+
+        // Remplir la liste des étudiants
+        function populateEtudiantSelect() {
+            const select = document.getElementById('etudiant-select');
+            select.innerHTML = '<option value="">Sélectionner un étudiant</option>';
+            
+            etudiants.forEach(etudiant => {
+                const option = document.createElement('option');
+                option.value = etudiant.nom;
+                option.textContent = `${etudiant.nom} (${etudiant.classe || 'N/A'} - ${etudiant.filiere || 'N/A'})`;
+                select.appendChild(option);
+            });
+        }
+
+        // Gestion du changement de type de cible
+        function handleCibleChange(event) {
+            const promoSection = document.getElementById('promo-section');
+            const etudiantSection = document.getElementById('etudiant-section');
+            
+            if (event.target.value === 'promo') {
+                promoSection.classList.remove('hidden');
+                etudiantSection.classList.add('hidden');
+            } else if (event.target.value === 'etudiant') {
+                promoSection.classList.add('hidden');
+                etudiantSection.classList.remove('hidden');
+            }
+        }
+
+        // Gestion de la soumission du formulaire
+        async function handleSubmit(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const deadlineData = {
+                titre: formData.get('titre'),
+                description: formData.get('description') || '',
+                dateLimite: formData.get('dateLimite'),
+                type: formData.get('type') || '',
+                cible: '',
+                valeurCible: ''
+            };
+
+            // Déterminer la cible
+            const cibleType = formData.get('cibleType');
+            if (cibleType === 'promo') {
+                const promoValue = formData.get('promo');
+                if (promoValue) {
+                    const [type, valeur] = promoValue.split(':');
+                    deadlineData.cible = type;
+                    deadlineData.valeurCible = valeur;
+                }
+            } else if (cibleType === 'etudiant') {
+                deadlineData.cible = 'etudiant';
+                deadlineData.valeurCible = formData.get('etudiant');
+            }
+
+            try {
+                const response = await fetch('/admin/deadlines', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(deadlineData)
+                });
+
+                if (response.ok) {
+                    showAlert('Deadline créée avec succès !', 'success');
+                    resetForm();
+                    loadDeadlines();
+                } else {
+                    showAlert('Erreur lors de la création de la deadline', 'error');
+                }
+            } catch (error) {
+                showAlert('Erreur de connexion', 'error');
+            }
+        }
+
+        // Charger les deadlines existantes
+        async function loadDeadlines() {
+            try {
+                const response = await fetch('/admin/deadlines');
+                if (response.ok) {
+                    const deadlines = await response.json();
+                    displayDeadlines(deadlines);
+                }
+            } catch (error) {
+                showAlert('Erreur lors du chargement des deadlines', 'error');
+            }
+        }
+
+        // Afficher les deadlines
+        function displayDeadlines(deadlines) {
+            const container = document.getElementById('deadlines-container');
+            
+            if (deadlines.length === 0) {
+                container.innerHTML = '<p>Aucune deadline trouvée.</p>';
+                return;
+            }
+
+            container.innerHTML = deadlines.map(deadline => `
+                <div class="deadline-card">
+                    <div class="deadline-header">
+                        <div class="deadline-title">${deadline.titre}</div>
+                        <div class="deadline-type">${deadline.type || 'Général'}</div>
+                    </div>
+                    <div class="deadline-info">
+                        <strong>Description:</strong> ${deadline.description || 'Aucune description'}
+                    </div>
+                    <div class="deadline-info">
+                        <strong>Date limite:</strong> ${new Date(deadline.dateLimite).toLocaleString('fr-FR')}
+                    </div>
+                    <div class="deadline-target">
+                        <strong>Cible:</strong> ${getCibleText(deadline.cible, deadline.valeurCible)}
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-secondary" onclick="deleteDeadline(${deadline.id})">🗑️ Supprimer</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Obtenir le texte de la cible
+        function getCibleText(cible, valeurCible) {
+            if (!cible || !valeurCible) return 'Tous les étudiants';
+            if (cible === 'classe') return `Classe: ${valeurCible}`;
+            if (cible === 'promo') return `Promo: ${valeurCible}`;
+            if (cible === 'etudiant') return `Étudiant: ${valeurCible}`;
+            return 'Tous les étudiants';
+        }
+
+        // Supprimer une deadline
+        async function deleteDeadline(id) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cette deadline ?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/admin/deadlines/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showAlert('Deadline supprimée avec succès !', 'success');
+                    loadDeadlines();
+                } else {
+                    showAlert('Erreur lors de la suppression', 'error');
+                }
+            } catch (error) {
+                showAlert('Erreur de connexion', 'error');
+            }
+        }
+
+        // Réinitialiser le formulaire
+        function resetForm() {
+            document.getElementById('deadlineForm').reset();
+            document.getElementById('promo-section').classList.add('hidden');
+            document.getElementById('etudiant-section').classList.add('hidden');
+        }
+
+        // Afficher une alerte
+        function showAlert(message, type) {
+            const container = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            container.innerHTML = '';
+            container.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
