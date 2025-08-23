@@ -1,0 +1,61 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  min-height: 100vh;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+.main-content {
+  flex: 1;
+  padding: 24px 32px;
+  padding-bottom: 80px; /* Espace pour le footer */
+}
+
+/* Style spécifique pour les étudiants (sans sidebar) */
+.app-container:has(.main-content:only-child) .main-content {
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 24px; /* Pas de footer pour les admins */
+}
+
+/* Style pour les étudiants avec footer */
+.app-container:has(.footer) .main-content {
+  padding-bottom: 80px; /* Espace pour le footer */
+}
+
+/* Style spécial pour les étudiants - header centré */
+.app-container:has(.footer) .header {
+  justify-content: center;
+  text-align: center;
+}
+
+.app-container:has(.footer) .header-user {
+  position: absolute;
+  right: 32px;
+}
+
+.dashboard-content {
+  display: flex;
+  gap: 32px;
+  margin-top: 24px;
+}
+
+.left-panel {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
