@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot ESPRIT</title>
+    <style>
+        :root {
+            --primary-color: #e63946;
+            --secondary-color: #457b9d;
+            --light-color: #f1faee;
+            --dark-color: #1d3557;
+            --accent-color: #a8dadc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: 
+        linear-gradient(135deg, rgba(230, 57, 70, 0.8), rgba(194, 24, 91, 0.8)), /* Dégradé rouge avec transparence */
+        url('chemin/vers/votre-image.jpg') no-repeat center center fixed; /* Image de fond */
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('logo_esprit.png') no-repeat center center;
+            background-size: 40%;
+            opacity: 0.08;
+            z-index: -1;
+        }
+
+        #chatbox {
+            width: 100%;
+            max-width: 450px;
+            height: 80vh;
+            max-height: 700px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        #header {
+            background: linear-gradient(135deg, var(--dark-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 18px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #header img {
+            height: 30px;
+            width: auto;
+            filter: brightness(0) invert(1);
+        }
+
+        #messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            padding: 12px 18px;
+            border-radius: 18px;
+            max-width: 80%;
+            word-wrap: break-word;
+            line-height: 1.4;
+            font-size: 0.95rem;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .user {
+            align-self: flex-end;
+            background: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot {
+            align-self: flex-start;
+            background: var(--light-color);
+            color: var(--dark-color);
+            border-bottom-left-radius: 5px;
+        }
+
+        .bot::before {
+            content: "ESPRIT";
+            position: absolute;
+            top: -18px;
+            left: 0;
+            font-size: 0.7rem;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        #inputArea {
+            display: flex;
+            padding: 15px;
+            background: white;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        #input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 25px;
+            outline: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: rgba(245, 245, 245, 0.7);
+        }
+
+        #input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+        }
+
+        #send {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 0 25px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #send:hover {
+            background: #c1121f;
+            transform: translateY(-1px);
+        }
+
+        #send:active {
+            transform: translateY(0);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Scrollbar styling */
+        #messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #messages::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        #messages::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        #messages::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 500px) {
+            #chatbox {
+                height: 100vh;
+                max-height: none;
+                border-radius: 0;
+            }
+            
+            body::before {
+                background-size: 70%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="chatbox">
+        <div id="header">
+            <span>Assistant Virtuel ESPRIT</span>
+        </div>
+        <div id="messages"></div>
+        <div id="inputArea">
+            <input type="text" id="input" placeholder="Posez votre question..." autofocus />
+            <button id="send">Envoyer</button>
+        </div>
+    </div>
+
+    <script>
+        const input = document.getElementById('input');
+        const send = document.getElementById('send');
+        const messages = document.getElementById('messages');
+
+        function addMessage(text, sender) {
+            const div = document.createElement('div');
+            div.className = 'message ' + sender;
+            div.textContent = text;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        send.onclick = async function () {
+            const text = input.value.trim();
+            if (!text) return;
+            addMessage(text, 'user');
+            input.value = '';
+            
+            // Show typing indicator
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'message bot';
+            typingIndicator.textContent = '...';
+            typingIndicator.style.opacity = '0.5';
+            messages.appendChild(typingIndicator);
+            messages.scrollTop = messages.scrollHeight;
+            
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text })
+                });
+                const data = await response.json();
+                
+                // Remove typing indicator
+                messages.removeChild(typingIndicator);
+                
+                // Add bot response
+                addMessage(data.reply, 'bot');
+            } catch (error) {
+                messages.removeChild(typingIndicator);
+                addMessage("Désolé, je rencontre des difficultés techniques. Veuillez réessayer plus tard.", 'bot');
+                console.error('Error:', error);
+            }
+        };
+
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') send.onclick();
+        });
+
+        // Welcome message
+        setTimeout(() => {
+            addMessage("Bonjour ! Je suis l'assistant virtuel d'ESPRIT. Comment puis-je vous aider aujourd'hui ?", 'bot');
+        }, 500);
+    </script>
+</body>
+</html>

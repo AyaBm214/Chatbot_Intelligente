@@ -1,0 +1,32 @@
+version: "3.1"
+
+intents:
+  - saluer
+  - au_revoir
+  - demander_dates
+  - demander_livrables
+  - demander_regles
+  - demander_roles
+
+responses:
+  utter_saluer:
+    - text: "Bonjour ! Je suis ton assistant PFE. Comment puis-je t’aider ? 😊"
+
+  utter_au_revoir:
+    - text: "Merci ! Bonne continuation pour ton PFE. 👋"
+
+  utter_dates:
+    - text: "Les dates importantes comme les dépôts et les soutenances sont disponibles sur la plateforme officielle PFE. Consulte-la régulièrement."
+
+  utter_livrables:
+    - text: "Tu dois déposer ton rapport final et ton code source sur la plateforme [PFE](https://pfe.esprit.tn). Respecte bien les échéances."
+
+  utter_regles:
+    - text: "Le rapport PFE doit suivre les normes de rédaction de l’école. Un modèle est disponible dans la section ‘Ressources’ de la plateforme PFE."
+
+  utter_roles:
+    - text: "Ton encadrant t’aide à encadrer techniquement ton travail. Le coordinateur PFE vérifie l’avancement et valide les étapes."
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

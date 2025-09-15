@@ -1,0 +1,44 @@
+version: "3.1"
+
+nlu:
+- intent: saluer
+  examples: |
+    - Bonjour
+    - Salut
+    - Bonsoir
+    - Hello
+
+- intent: au_revoir
+  examples: |
+    - Merci
+    - Au revoir
+    - À bientôt
+    - Bye
+
+- intent: demander_dates
+  examples: |
+    - Quelles sont les dates importantes ?
+    - C'est quand la soutenance ?
+    - Quelle est la date limite de dépôt ?
+    - Quand faut-il rendre le rapport ?
+
+- intent: demander_livrables
+  examples: |
+    - Où déposer mon rapport ?Quelles sont les règles pour rédiger le rapport
+    - Comment soumettre le PFE ?
+    - Où uploader mon livrable ?
+    - Quels sont les livrables à fournir ?
+
+- intent: demander_regles
+  examples: |
+    -  ?
+    - Y a-t-il un modèle pour le PFE ?
+    - Comment valider mon rapport ?
+    - Où trouver le guide de rédaction ?
+
+- intent: demander_roles
+  examples: |
+    - Quel est le rôle de mon encadrant ?
+    - Qui valide mon travail ?
+    - Mon encadrant doit-il assister à la soutenance ?
+    - Que fait le coordinateur PFE ?

@@ -1,0 +1,26 @@
+{
+  "lookup": {
+    "rules": {
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"saluer\"}}]": "utter_saluer",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"saluer\"}}, {\"prev_action\": {\"action_name\": \"utter_saluer\"}, \"user\": {\"intent\": \"saluer\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"au_revoir\"}}]": "utter_au_revoir",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"au_revoir\"}}, {\"prev_action\": {\"action_name\": \"utter_au_revoir\"}, \"user\": {\"intent\": \"au_revoir\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"demander_roles\"}}]": "utter_roles",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"demander_roles\"}}, {\"prev_action\": {\"action_name\": \"utter_roles\"}, \"user\": {\"intent\": \"demander_roles\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"demander_regles\"}}]": "utter_regles",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"demander_regles\"}}, {\"prev_action\": {\"action_name\": \"utter_regles\"}, \"user\": {\"intent\": \"demander_regles\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"demander_dates\"}}]": "utter_dates",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"demander_dates\"}}, {\"prev_action\": {\"action_name\": \"utter_dates\"}, \"user\": {\"intent\": \"demander_dates\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"demander_livrables\"}}]": "utter_livrables",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"demander_livrables\"}}, {\"prev_action\": {\"action_name\": \"utter_livrables\"}, \"user\": {\"intent\": \"demander_livrables\"}}]": "action_listen"
+    },
+    "rule_only_slots": [],
+    "rule_only_loops": [],
+    "rules_for_loop_unhappy_path": {},
+    "rules_not_in_stories": [
+      "predicting default action with intent restart",
+      "predicting default action with intent back",
+      "predicting default action with intent session_start"
+    ]
+  }
+}

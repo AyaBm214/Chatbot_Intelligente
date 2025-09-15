@@ -1,0 +1,18 @@
+#### This file contains tests to evaluate that your bot behaves as expected.
+#### If you want to learn more, please see the docs: https://rasa.com/docs/rasa/testing-your-assistant
+version: "3.1"
+
+test_stories:
+- story: test question dates
+  steps:
+    - user: |
+        Quelles sont les dates importantes ?
+      intent: demander_dates
+    - action: utter_dates
+
+- story: test question livrables
+  steps:
+    - user: |
+        Où déposer mon rapport ?
+      intent: demander_livrables
+    - action: utter_livrables

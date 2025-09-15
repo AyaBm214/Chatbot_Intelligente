@@ -1,0 +1,32 @@
+version: "3.1"
+
+rules:
+- rule: salutation
+  steps:
+    - intent: saluer
+    - action: utter_saluer
+
+- rule: au revoir
+  steps:
+    - intent: au_revoir
+    - action: utter_au_revoir
+
+- rule: répondre aux dates
+  steps:
+    - intent: demander_dates
+    - action: utter_dates
+
+- rule: répondre aux livrables
+  steps:
+    - intent: demander_livrables
+    - action: utter_livrables
+
+- rule: répondre aux règles
+  steps:
+    - intent: demander_regles
+    - action: utter_regles
+
+- rule: répondre aux rôles
+  steps:
+    - intent: demander_roles
+    - action: utter_roles
