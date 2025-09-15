@@ -44,7 +44,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://localhost:3001", "*")
+                .allowedOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:5005", "*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(false);
@@ -66,6 +66,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .requestMatchers("/deadlines/health").permitAll()
                 .requestMatchers("/api/deadlines/schema-check").permitAll()
                 .requestMatchers("/deadlines/schema-check").permitAll()
+                .requestMatchers("/public/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/etudiant/**").hasRole("ETUDIANT")
                 .requestMatchers("/api/deadlines/**").authenticated()
@@ -81,7 +82,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:3001", "*"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:3001", "http://localhost:5005", "*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(false);
