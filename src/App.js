@@ -9,12 +9,15 @@ import FAQManager from "./components/FAQManager";
 import DeadlinesManager from "./components/DeadlinesManager";
 import StudentDeadlinesView from "./components/StudentDeadlinesView";
 import Footer from "./components/Footer";
+import Chatbot from "./components/Chatbot";
 import "./App.css";
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [activeMenu, setActiveMenu] = useState("Dashboard");
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
 
   useEffect(() => {
     // Vérifier si l'utilisateur est déjà connecté au chargement
@@ -50,6 +53,14 @@ function App() {
     setShowRegister(true);
   };
 
+  const toggleChatbot = () => {
+    setIsChatbotOpen(!isChatbotOpen);
+  };
+
+  const closeChatbot = () => {
+    setIsChatbotOpen(false);
+  };
+
   // Si l'utilisateur n'est pas connecté, afficher Login ou Register
   if (!isAuthenticated) {
     return showRegister ? (
@@ -81,7 +92,8 @@ function App() {
         {authService.isEtudiant() && <StudentDeadlinesView />}
         {/* Tu peux ajouter d'autres vues ici selon le rôle */}
       </div>
-      {authService.isEtudiant() && <Footer />}
+      {authService.isEtudiant() && <Footer onChatbotToggle={toggleChatbot} />}
+      <Chatbot isOpen={isChatbotOpen} onClose={closeChatbot} />
     </div>
   );
 }

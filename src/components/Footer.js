@@ -1,10 +1,9 @@
 import React from "react";
 import "./Footer.css";
 
-export default function Footer() {
+export default function Footer({ onChatbotToggle }) {
   const handleChatbotClick = () => {
-    // Ici vous pouvez ajouter la logique pour ouvrir le chatbot
-    alert("🤖 Chatbot en cours de développement !");
+    onChatbotToggle();
   };
 
   return (
